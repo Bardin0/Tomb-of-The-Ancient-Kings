@@ -1,7 +1,10 @@
+#!/usr/bin/env python3
+import copy
+
 import tcod
 
 from engine import Engine
-from entity import Entity
+import entity_factories
 from input_handlers import EventHandler
 from procgen import generate_dungeon
 
@@ -26,7 +29,7 @@ def main() -> None:
 
     event_handler = EventHandler()
 
-    player = Entity (int(screen_width / 2), int(screen_height / 2),"@", (255,255,255))
+    player = copy.deepcopy(entity_factories.player)
     
 
     game_map = generate_dungeon(
@@ -35,8 +38,8 @@ def main() -> None:
         room_max_size=room_max_size,
         map_width=map_width,
         map_height=map_height,
-        max_monsters_per_room=max_monsters_per_room
-        player=player
+        max_monsters_per_room=max_monsters_per_room,
+        player=player,
     )
 
     engine = Engine(event_handler=event_handler, game_map=game_map, player=player)

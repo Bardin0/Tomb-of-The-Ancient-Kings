@@ -5,6 +5,7 @@ import random
 
 import tcod
 
+import entity_factories
 from game_map import GameMap
 import tile_types
 
@@ -50,9 +51,9 @@ def place_entities(
 
         if not any (entity.x == x and entity.y == y for entity in dungeon.entities):
             if random.random() < 0.8:
-                pass # TODO: place an orc here
+                entity_factories.orc.spawn(dungeon, x, y)
             else:
-                pass # TODO: place a Troll here
+                entity_factories.orc.spawn(dungeon, x, y)
 
 def tunnel_between(
         start: Tuple[int,int], end: Tuple[int,int]
@@ -113,7 +114,7 @@ def generate_dungeon(
             for x, y in tunnel_between(rooms[-1].center, new_room.center):
                 dungeon.tiles[x, y] = tile_types.floor
 
-        place_entites(new_room, dungeon, max_monsters_per_room)
+        place_entities(new_room, dungeon, max_monsters_per_room)
 
         # Finally, append the new room to the list.
         rooms.append(new_room)
