@@ -1,4 +1,4 @@
-from __future__ import annotation
+from __future__ import annotations
 
 from typing import Optional, TYPE_CHECKING
 
