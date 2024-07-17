@@ -5,12 +5,10 @@ import tcod
 
 from engine import Engine
 import entity_factories
-from input_handlers import EventHandler
 from procgen import generate_dungeon
 
 
 def main() -> None:
-
     screen_width = 80
     screen_height = 50
 
@@ -51,10 +49,9 @@ def main() -> None:
     ) as context:
         root_console = tcod.Console(screen_width, screen_height, order="F")
         while True:
+            engine.render(console=root_console, context=context)
 
-            engine.render(console = root_console, context = context)
-
-            engine.event_handler.handle_events
+            engine.event_handler.handle_events()
 
 
 if __name__ == "__main__":
