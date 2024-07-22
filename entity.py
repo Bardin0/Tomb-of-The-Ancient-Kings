@@ -7,6 +7,7 @@ from render_order import RenderOrder
 
 if TYPE_CHECKING:
     from components.ai import BaseAI
+    import co
     from components.fighter import Fighter
     from game_map import GameMap
 
