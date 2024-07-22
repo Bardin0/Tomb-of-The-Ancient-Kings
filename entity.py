@@ -40,7 +40,7 @@ class Entity:
         self.render_order = render_order
         if parent:
             # If parent isn't provided now then it will be set later.
-            self.gamemap = parent
+            self.parent = parent
             parent.entities.add(self)
     
     @property
@@ -64,7 +64,7 @@ class Entity:
             if hasattr(self, "parent"):  # Possibly uninitialized.
                 if self.parent is self.gamemap:
                     self.gamemap.entities.remove(self)
-            self.gamemap = gamemap
+            self.parent = gamemap
             gamemap.entities.add(self)
 
     def move(self, dx: int, dy: int) -> None:
