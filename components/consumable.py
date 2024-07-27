@@ -7,7 +7,7 @@ import color
 import components.ai
 from components.base_component import BaseComponent
 import components.inventory
-from input_handlers import SingleRangedAttackHandler
+from input_handlers import SingleRangedAttackHandler, AreaRangedAttackHandler
 from exceptions import Impossible
 
 if TYPE_CHECKING:
@@ -85,6 +85,41 @@ class HealingConsumable(Consumable):
         else:
             raise Impossible(f"Your health is already full.")
         
+class FireballDamageConsumable(Consumable):
+    def __init__(self, damage: int, radius: int):
+        self.damage = damage
+        self.radius = radius
+
+    def get_action(self, consumer: Actor) -> Optional[actions.Action]:
+        self.engine.message_log.add_message(
+            "Select a target location.", color.needs_target
+        )
+        self.engine.event_handler = AreaRangedAttackHandler(
+            self.engine,
+            radius=self.radius,
+            callback=lambda xy: actions.ItemAction(consumer, self.parent, xy),
+        )
+        return None
+
+    def activate(self, action: actions.ItemAction) -> None:
+        target_xy = action.target_xy
+
+        if not self.engine.game_map.visible[target_xy]:
+            raise Impossible("You cannot target an area that you cannot see.")
+
+        targets_hit = False
+        for actor in self.engine.game_map.actors:
+            if actor.distance(*target_xy) <= self.radius:
+                self.engine.message_log.add_message(
+                    f"The {actor.name} is engulfed in a fiery explosion, taking {self.damage} damage!"
+                )
+                actor.fighter.take_damage(self.damage)
+                targets_hit = True
+
+        if not targets_hit:
+            raise Impossible("There are no targets in the radius.")
+        self.consume()
+        
 class LightningDamageConsumable(Consumable):
     def __init__(self, damage: int, maximum_range: int):
         self.damage = damage
@@ -111,3 +146,4 @@ class LightningDamageConsumable(Consumable):
             self.consume()
         else:
             raise Impossible("No enemy is close enough to strike.")
+        
