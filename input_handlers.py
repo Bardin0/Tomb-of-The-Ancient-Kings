@@ -62,6 +62,13 @@ CONFIRM_KEYS = {
     tcod.event.K_KP_ENTER,
 }
 
+CURSOR_Y_KEYS = {
+    tcod.event.K_UP: -1,
+    tcod.event.K_DOWN: 1,
+    tcod.event.K_PAGEUP: -10,
+    tcod.event.K_PAGEDOWN: 10,
+}
+
 ActionOrHandler = Union[Action, "BaseEventHandler"]
 """An event handler return value which can trigger an action or switch active handlers.
 
@@ -184,6 +191,51 @@ class AskUserEventHandler(EventHandler):
         """
         return MainGameEventHandler(self.engine)
     
+class CharacterScreenEventHandler(AskUserEventHandler):
+    TITLE = "Character Information"
+
+    def on_render(self, console: tcod.Console) -> None:
+        super().on_render(console)
+
+        if self.engine.player.x <= 30:
+            x = 40
+        else:
+            x = 0
+
+        y = 0
+
+        width = len(self.TITLE) + 4
+
+        console.draw_frame(
+            x=x,
+            y=y,
+            width=width,
+            height=7,
+            title=self.TITLE,
+            clear=True,
+            fg=(255, 255, 255),
+            bg=(0, 0, 0),
+        )
+
+        console.print(
+            x=x + 1, y=y + 1, string=f"Level: {self.engine.player.level.current_level}"
+        )
+        console.print(
+            x=x + 1, y=y + 2, string=f"XP: {self.engine.player.level.current_xp}"
+        )
+        console.print(
+            x=x + 1,
+            y=y + 3,
+            string=f"XP for next Level: {self.engine.player.level.experience_to_next_level}",
+        )
+
+        console.print(
+            x=x + 1, y=y + 4, string=f"Attack: {self.engine.player.fighter.power}"
+        )
+        console.print(
+            x=x + 1, y=y + 5, string=f"Defense: {self.engine.player.fighter.defense}"
+        )
+
 class LevelUpEventHandler(AskUserEventHandler):
     TITLE = "Level Up"
 
@@ -327,7 +379,6 @@ class InventoryActivateHandler(InventoryEventHandler):
         """Return the action for the selected item."""
         return item.consumable.get_action(self.engine.player)
 
-
 class InventoryDropHandler(InventoryEventHandler):
     """Handle dropping an inventory item."""
 
@@ -388,7 +439,6 @@ class SelectIndexHandler(AskUserEventHandler):
     def on_index_selected(self, x: int, y: int) -> Optional[ActionOrHandler]:
         """Called when an index is selected."""
         raise NotImplementedError()
-
 
 class LookHandler(SelectIndexHandler):
     """Lets the player look around using the keyboard."""
@@ -475,6 +525,9 @@ class MainGameEventHandler(EventHandler):
         
         elif key == tcod.event.K_i:
             return InventoryActivateHandler(self.engine)
+        
+        elif key == tcod.event.K_c:
+            return CharacterScreenEventHandler(self.engine)
 
         elif key == tcod.event.K_d:
             return InventoryDropHandler(self.engine)
@@ -484,7 +537,6 @@ class MainGameEventHandler(EventHandler):
 
         # No valid key was pressed
         return action
-
 
 class GameOverEventHandler(EventHandler):
 
@@ -500,14 +552,6 @@ class GameOverEventHandler(EventHandler):
     def ev_keydown(self, event: tcod.event.KeyDown) -> None:
         if event.sym == tcod.event.K_ESCAPE:
             self.on_quit()
-
-CURSOR_Y_KEYS = {
-    tcod.event.K_UP: -1,
-    tcod.event.K_DOWN: 1,
-    tcod.event.K_PAGEUP: -10,
-    tcod.event.K_PAGEDOWN: 10,
-}
-
 
 class HistoryViewer(EventHandler):
     """Print the history on a larger window which can be navigated."""
