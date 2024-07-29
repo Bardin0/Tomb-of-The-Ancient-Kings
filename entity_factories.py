@@ -1,6 +1,6 @@
 from components.ai import HostileEnemy
 from components.fighter import Fighter
-from components import consumable
+from components import consumable, equippable
 from components.inventory import Inventory
 from components.level import Level
 from entity import Actor, Item
@@ -14,6 +14,8 @@ player = Actor(
     inventory=Inventory(capacity=26),
     level=Level(level_up_base=200),
 )
+
+# Enemies
 
 orc = Actor(
     char="o",
@@ -34,12 +36,16 @@ troll = Actor(
     level=Level(xp_given=100),
 )
 
+# Potionsgit
+
 health_potion = Item(
     char="!",
     color=(127, 0, 255),
     name = "Health Potion",
     consumable=consumable.HealingConsumable(amount=4),
 )
+
+# Scrolls/Spells
 
 lightning_scroll = Item(
     char="~",
@@ -60,4 +66,26 @@ fireball_scroll = Item(
     color=(255, 0, 0),
     name="Fireball Scroll",
     consumable=consumable.FireballDamageConsumable(damage=12, radius=3),
+)
+
+# Weapons
+
+dagger = Item(
+    char="/", color=(0, 191, 255), name="Dagger", equippable=equippable.Dagger()
+)
+
+sword = Item(char="/", color=(0, 191, 255), name="Sword", equippable=equippable.Sword())
+
+
+# Armour
+
+leather_armor = Item(
+    char="[",
+    color=(139, 69, 19),
+    name="Leather Armor",
+    equippable=equippable.LeatherArmor(),
+)
+
+chain_mail = Item(
+    char="[", color=(139, 69, 19), name="Chain Mail", equippable=equippable.ChainMail()
 )
