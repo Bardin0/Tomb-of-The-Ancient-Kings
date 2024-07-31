@@ -359,6 +359,9 @@ class InventoryEventHandler(AskUserEventHandler):
         else:
             console.print(x + 1, y + 1, "(Empty)")
 
+        console.print(x + 3, height, "Press 0 to Organize")
+
+
     def sort_inventory(self) -> Optional[ActionOrHandler]:
         return self.engine.player.inventory.items.sort()
 
