@@ -83,7 +83,6 @@ class DropItem(ItemAction):
             
         self.entity.inventory.drop(self.item)
 
-
 class EquipAction(Action):
     def __init__(self, entity: Actor, item: Item):
         super().__init__(entity)
@@ -135,7 +134,6 @@ class ActionWithDirection(Action):
     def perform(self) -> None:
         raise NotImplementedError()
 
-
 class MeleeAction(ActionWithDirection):
     def perform(self) -> None:
         target = self.target_actor
@@ -160,7 +158,6 @@ class MeleeAction(ActionWithDirection):
                 f"{attack_desc} but does no damage.", attack_color
             )
 
-
 class MovementAction(ActionWithDirection):
     def perform(self) -> None:
         dest_x, dest_y = self.dest_xy
@@ -173,7 +170,6 @@ class MovementAction(ActionWithDirection):
             raise exceptions.Impossible("That way is blocked")  # Destination is blocked by an entity.
 
         self.entity.move(self.dx, self.dy)
-
 
 class BumpAction(ActionWithDirection):
     def perform(self) -> None:

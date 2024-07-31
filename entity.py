@@ -160,3 +160,6 @@ class Item(Entity):
 
         if self.equippable:
             self.equippable.parent = self
+
+    def __lt__(self, other):
+        return self.name < other.name

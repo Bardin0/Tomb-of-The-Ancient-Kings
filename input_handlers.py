@@ -359,10 +359,16 @@ class InventoryEventHandler(AskUserEventHandler):
         else:
             console.print(x + 1, y + 1, "(Empty)")
 
+    def sort_inventory(self) -> Optional[ActionOrHandler]:
+        return self.engine.player.inventory.items.sort()
+
     def ev_keydown(self, event: tcod.event.KeyDown) -> Optional[ActionOrHandler]:
         player = self.engine.player
         key = event.sym
         index = key - tcod.event.K_a
+
+        if key == tcod.event.K_0:
+            self.sort_inventory()
 
         if 0 <= index <= 26:
             try:

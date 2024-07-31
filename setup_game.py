@@ -51,9 +51,13 @@ def new_game() -> Engine:
 
     dagger = copy.deepcopy(entity_factories.dagger)
     leather_armor = copy.deepcopy(entity_factories.leather_armor)
+    health_pot = copy.deepcopy(entity_factories.health_potion)
 
     dagger.parent = player.inventory
     leather_armor.parent = player.inventory
+    health_pot.parent = player.inventory
+
+    player.inventory.items.append(health_pot)
 
     player.inventory.items.append(dagger)
     player.equipment.toggle_equip(dagger, add_message=False)
@@ -94,7 +98,7 @@ class MainMenu(input_handlers.BaseEventHandler):
 
         menu_width = 24
         for i, text in enumerate(
-            ["[N] Play a new game", "[C] Continue last game", "[Q] Quit"]
+            ["[N] Play a new game", "[C] Continue last game", "[Q] Quit",]
         ):
             console.print(
                 console.width // 2,
