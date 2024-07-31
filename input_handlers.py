@@ -564,6 +564,8 @@ class GameOverEventHandler(EventHandler):
     def ev_keydown(self, event: tcod.event.KeyDown) -> None:
         if event.sym == tcod.event.K_ESCAPE:
             self.on_quit()
+        elif event.sym == tcod.event.K_v:
+            return HistoryViewer(self.engine)
 
 class HistoryViewer(EventHandler):
     """Print the history on a larger window which can be navigated."""
