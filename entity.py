@@ -140,6 +140,7 @@ class Item(Entity):
         name: str = "<Unnamed>",
         consumable: Optional[Consumable] = None,
         equippable: Optional[Equippable] = None,
+        sound: str = "?",
     ):
         super().__init__(
             x=x,
@@ -152,6 +153,7 @@ class Item(Entity):
         )
 
         self.consumable = consumable
+        self.sound = sound
         
         if self.consumable:
             self.consumable.parent = self

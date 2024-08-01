@@ -10,6 +10,10 @@ import components.inventory
 from input_handlers import SingleRangedAttackHandler, AreaRangedAttackHandler, ActionOrHandler
 from exceptions import Impossible
 
+import soundfile
+import tcod.sdl.audio
+
+
 if TYPE_CHECKING:
     from entity import Actor, Item
 
@@ -33,6 +37,13 @@ class Consumable(BaseComponent):
         inventory = entity.parent
         if isinstance(inventory, components.inventory.Inventory):
             inventory.items.remove(entity)
+
+    def play_audio(self, file: str) -> None:
+        mixer = tcod.sdl.audio.BasicMixer(tcod.sdl.audio.open())  # Setup BasicMixer with the default audio output
+        sound, sample_rate = soundfile.read(file)  # Load an audio sample using SoundFile.
+        sound = mixer.device.convert(sound, sample_rate)  # Convert this sample to the format expected by the device.
+        channel = mixer.play(sound)
+        return None
 
 class ConfusionConsumable(Consumable):
     def __init__(self, number_of_turns: int):
@@ -99,7 +110,7 @@ class FireballDamageConsumable(Consumable):
             radius=self.radius,
             callback=lambda xy: actions.ItemAction(consumer, self.parent, xy),
         )
-        return None
+        return None    
 
     def activate(self, action: actions.ItemAction) -> None:
         target_xy = action.target_xy
@@ -119,6 +130,8 @@ class FireballDamageConsumable(Consumable):
         if not targets_hit:
             raise Impossible("There are no targets in the radius.")
         self.consume()
+
+        self.play_audio(self.parent.sound)
         
 class LightningDamageConsumable(Consumable):
     def __init__(self, damage: int, maximum_range: int):

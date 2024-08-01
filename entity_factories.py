@@ -70,6 +70,7 @@ fireball_scroll = Item(
     color=(255, 0, 0),
     name="Fireball Scroll",
     consumable=consumable.FireballDamageConsumable(damage=12, radius=3),
+    sound= "sound_effects/fireball.mp3"
 )
 
 # Weapons
