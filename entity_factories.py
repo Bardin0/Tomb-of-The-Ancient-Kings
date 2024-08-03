@@ -15,6 +15,7 @@ player = Actor(
     fighter=Fighter(hp=30, base_defense=2, base_power=5),
     inventory=Inventory(capacity=26),
     level=Level(level_up_base=200),
+    sound="sound_effects/melee.wav"
 )
 
 # Enemies

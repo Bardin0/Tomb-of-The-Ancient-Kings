@@ -39,6 +39,7 @@ class Consumable(BaseComponent):
             inventory.items.remove(entity)
 
     def play_audio(self, file: str) -> None:
+        """Plays the audio for the given consumable"""
         mixer = tcod.sdl.audio.BasicMixer(tcod.sdl.audio.open())  # Setup BasicMixer with the default audio output
         sound, sample_rate = soundfile.read(file)  # Load an audio sample using SoundFile.
         sound = mixer.device.convert(sound, sample_rate)  # Convert this sample to the format expected by the device.

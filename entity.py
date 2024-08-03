@@ -36,6 +36,7 @@ class Entity:
         name: str = "<Unnamed>",
         blocks_movement: bool = False,
         render_order: RenderOrder = RenderOrder.CORPSE,
+        sound: str = None,
     ):
         self.x = x
         self.y = y
@@ -44,6 +45,7 @@ class Entity:
         self.name = name
         self.blocks_movement = blocks_movement
         self.render_order = render_order
+        self.sound = sound
         if parent:
             # If parent isn't provided now then it will be set later.
             self.parent = parent
@@ -99,6 +101,7 @@ class Actor(Entity):
         fighter: Fighter,
         inventory: Inventory,
         level: Level,
+        sound: str = None,
     ):
         super().__init__(
             x=x,
@@ -108,6 +111,7 @@ class Actor(Entity):
             name=name,
             blocks_movement=True,
             render_order=RenderOrder.ACTOR,
+            sound=sound,
         )
 
         self.ai: Optional[BaseAI] = ai_cls(self)
@@ -140,7 +144,7 @@ class Item(Entity):
         name: str = "<Unnamed>",
         consumable: Optional[Consumable] = None,
         equippable: Optional[Equippable] = None,
-        sound: str = "?",
+        sound: str = None,
     ):
         super().__init__(
             x=x,
@@ -150,6 +154,7 @@ class Item(Entity):
             name=name,
             blocks_movement=False,
             render_order=RenderOrder.ITEM,
+            sound=sound,
         )
 
         self.consumable = consumable
