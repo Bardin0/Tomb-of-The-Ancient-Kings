@@ -8,11 +8,11 @@ from typing import Optional, Tuple, TYPE_CHECKING
 import soundfile
 import tcod.sdl.audio
 
+from audio import play_audio
+
 if TYPE_CHECKING:
     from engine import Engine
     from entity import Actor, Entity, Item
-
-mixer = tcod.sdl.audio.BasicMixer(tcod.sdl.audio.open())  # Setup BasicMixer with the default audio output
 
 class Action:
     def __init__(self, entity: Actor) -> None:
@@ -95,6 +95,7 @@ class EquipAction(Action):
 
     def perform(self) -> None:
         self.entity.equipment.toggle_equip(self.item)
+        play_audio("sound_effects/equip.mp3")
 
 class WaitAction(Action):
     def perform(self) -> None:
@@ -138,13 +139,6 @@ class ActionWithDirection(Action):
 
     def perform(self) -> None:
         raise NotImplementedError()
-    
-    def play_audio(self, file: str) -> None:
-        """Plays the audio for the given consumable"""
-        sound, sample_rate = soundfile.read(file)  # Load an audio sample using SoundFile.
-        sound = mixer.device.convert(sound, sample_rate)  # Convert this sample to the format expected by the device.
-        channel = mixer.play(sound)
-        return None
 
 class MeleeAction(ActionWithDirection):
     def perform(self) -> None:
@@ -170,7 +164,7 @@ class MeleeAction(ActionWithDirection):
                 f"{attack_desc} but does no damage.", attack_color
             )
         if target is not self.engine.player:
-            self.play_audio(self.engine.player.sound)
+            play_audio(self.engine.player.sound)
 
 class MovementAction(ActionWithDirection):
     def perform(self) -> None:

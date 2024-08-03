@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from components.base_component import BaseComponent
+from audio import play_audio
 
 if TYPE_CHECKING:
     from entity import Actor
@@ -58,6 +59,7 @@ class Level(BaseComponent):
         self.engine.message_log.add_message("Your health improves!")
 
         self.increase_level()
+        play_audio("sound_effects/level_up.wav")
 
     def increase_power(self, amount: int = 1) -> None:
         self.parent.fighter.base_power += amount
@@ -65,6 +67,7 @@ class Level(BaseComponent):
         self.engine.message_log.add_message("You feel stronger!")
 
         self.increase_level()
+        play_audio("sound_effects/level_up.wav")
 
     def increase_defense(self, amount: int = 1) -> None:
         self.parent.fighter.base_defense += amount
@@ -72,3 +75,4 @@ class Level(BaseComponent):
         self.engine.message_log.add_message("Your movements are getting swifter!")
 
         self.increase_level()
+        play_audio("sound_effects/level_up.wav")
