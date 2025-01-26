@@ -15,6 +15,7 @@ from actions import (
 )
 import color
 import exceptions
+import death_screen
 
 if TYPE_CHECKING:
     from engine import Engine

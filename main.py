@@ -9,17 +9,21 @@ import exceptions
 import input_handlers
 import setup_game
 
+import streamlit as sl
+
 def save_game(handler: input_handlers.BaseEventHandler, filename: str) -> None:
     """If the current event handler has an active Engine then save it."""
     if isinstance(handler, input_handlers.EventHandler):
         handler.engine.save_as(filename)
         print("Game saved.")
 
+#flags = tcod.context.SDL_WINDOW_FULLSCREEN_DESKTOP # Sets window to full screen on launch
+
 def main() -> None:
     screen_width = 80
     screen_height = 50
 
-    tileset = tcod.tileset.load_tilesheet(
+    tileset = tcod.tileset.load_tilesheet(  # loads the tile sheet 
         "dejavu10x10_gs_tc.png", 32, 8, tcod.tileset.CHARMAP_TCOD
     )
 
@@ -31,6 +35,7 @@ def main() -> None:
         tileset=tileset,
         title="Yet Another Roguelike Tutorial",
         vsync=True,
+        #sdl_window_flags=flags,
     ) as context:
         root_console = tcod.Console(screen_width, screen_height, order="F")
         try:
@@ -38,7 +43,6 @@ def main() -> None:
                 root_console.clear()
                 handler.on_render(console=root_console)
                 context.present(root_console)
-
                 try:
                     for event in tcod.event.wait():
                         context.convert_event(event)
